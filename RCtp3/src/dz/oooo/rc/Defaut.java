@@ -4,11 +4,13 @@ public class Defaut {
 	private FormuleCNF prerquis;
 	private FormuleCNF justificatif;
 	private FormuleCNF consequent;
+	private int id;
 	
-	public Defaut(FormuleCNF prerquis,FormuleCNF justificatif,FormuleCNF consequent){
+	public Defaut(FormuleCNF prerquis,FormuleCNF justificatif,FormuleCNF consequent,int id){
 		this.prerquis=prerquis;
 		this.justificatif=justificatif;
 		this.consequent=consequent;
+		this.id=id;
 	}
 	public Defaut(short prerequis,short justificatif,short consequent){
 		this.prerquis=new FormuleCNF(prerequis);
@@ -39,5 +41,12 @@ public class Defaut {
 	public void setConsequent(FormuleCNF consequent) {
 		this.consequent = consequent;
 	}
-		
+	
+	public int getId(){
+		return this.id;
+	}
+	
+	public void setId(int id){
+		this.id=id;
+	}
 }

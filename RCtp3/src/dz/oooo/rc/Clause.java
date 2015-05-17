@@ -65,4 +65,12 @@ public class Clause {
 		Clause c=(Clause) o;
 		return this.equals(c);
 	}
+	
+	public Clause clone(){
+		Clause c=new Clause();
+		for(int i=0;i<this.litteraux.size();i++){
+			c.addLitteral(this.litteraux.get(i));
+		}
+		return c;
+	}
 }

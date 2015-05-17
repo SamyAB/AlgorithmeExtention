@@ -63,9 +63,9 @@ public class FormuleCNF {
 	}
 	
 	public boolean equals(FormuleCNF f){
-		if(f==null || f.getClauses().size()!=this.clauses.size()){
+		/*if(f==null || f.getClauses().size()!=this.clauses.size()){
 			return false;
-		}
+		}*/
 		Iterator<Clause> clausesIterator=f.getClauses().iterator();
 		while(clausesIterator.hasNext()){
 			if(!this.clauses.contains(clausesIterator.next())){
@@ -78,6 +78,14 @@ public class FormuleCNF {
 	public boolean equals(Object o){
 		FormuleCNF f=(FormuleCNF) o;
 		return this.equals(f);
+	}
+	
+	public FormuleCNF clone(){
+		FormuleCNF f=new FormuleCNF();
+		for(int i=0;i<this.clauses.size();i++){
+			f.clauses.add(this.clauses.get(i).clone());
+		}
+		return f;
 	}
 	
 }

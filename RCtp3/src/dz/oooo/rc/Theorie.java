@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Theorie {
 	private Monde monde;
@@ -57,7 +58,7 @@ public class Theorie {
 						c.addClause(new Clause(consequent[i]));
 					}
 					
-					Defaut d=new Defaut(p, j, c);
+					Defaut d=new Defaut(p, j, c,this.defauts.size());
 					this.defauts.add(d);
 				}
 			}
@@ -66,7 +67,6 @@ public class Theorie {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -85,6 +85,52 @@ public class Theorie {
 
 	public void setDefauts(ArrayList<Defaut> defauts) {
 		this.defauts = defauts;
+	}
+	
+	public ArrayList<Monde> extension(ArrayList<Defaut> defauts,Monde e,Monde sigma){
+		ArrayList<Monde> extensions=new ArrayList<Monde>();
+		ArrayList<Defaut> nonTeste=new ArrayList<Defaut>();
+		nonTeste.addAll(defauts);
+		Iterator<Defaut> defautIterator=defauts.iterator();
+		while(defautIterator.hasNext()){
+			Defaut tmpDefaut=defautIterator.next();
+			nonTeste.remove(tmpDefaut);
+			if(sigma.getFormules().contains(tmpDefaut.getPrerquis())){
+				System.out.println("Le prérquis du défaut "+tmpDefaut.getId()+" appartient à SigmaDelta(E), le défaut est donc utilisable");
+				FormuleCNF negationDeJustificatif = tmpDefaut.getJustificatif().negation();
+				if(e.getFormules().contains(negationDeJustificatif)){
+					System.out.println("La négation du justificatif du défaut "+tmpDefaut.getId()+" appartient à E, le défaut n'est donc pas applicable");
+				}
+				else if(e.getFormules().contains(tmpDefaut.getJustificatif())){
+					System.out.println("La négation du justificatif du défaut "+tmpDefaut.getId()+" n'appartient pas à E, le défaut est donc applicable");
+					System.out.println("Le conséquent du défaut est ajouté à SigmaDelta(E)");
+					sigma.addFormule(tmpDefaut.getConsequent());
+					e.addFormule(tmpDefaut.getConsequent());
+				}
+				else{
+					System.out.println("Nous ne savons pas si la négation du justificatif du défaut "+tmpDefaut.getId()+" appartient ou non à E");
+					System.out.println("2 cas:");
+					System.out.println("1er cas : la négation du justificatif du défaut appartient à E, le défaut et donc non applicable");
+					Monde e1=e.clone();
+					e1.addFormule(negationDeJustificatif);
+					extensions.addAll(extension(nonTeste,e1,sigma.clone()));
+					System.out.println("2eme cas : la négation du justificatif du défaut n'appartient pas à E, le défaut est donc applicable");
+					sigma.addFormule(tmpDefaut.getConsequent());
+					e.addFormule(tmpDefaut.getConsequent());
+				}
+			}
+			else{
+				System.out.println("Le prérquis du défaut "+tmpDefaut.getId()+" n'appartient pas à SigmaDelta(E), le défaut n'est pas utilisable");
+				System.out.println("le prérquis :"+tmpDefaut.getPrerquis());
+				System.out.println(sigma.getFormules().get(0).toString());
+			}
+		}
+		if(e.coherent()&&e.equals(sigma)){
+			System.out.println("E:"+e+" est une extention");
+			extensions.add(e);
+		}
+		
+		return extensions;
 	}
 	
 	
