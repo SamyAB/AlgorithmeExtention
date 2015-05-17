@@ -22,6 +22,13 @@ public class Clause {
 		this(a,b);
 		this.litteraux.add(c);
 	}
+	public Clause(String clause){
+		this();
+		String[] litteraux=clause.split(",");
+		for(int i=0;i<litteraux.length;i++){
+			this.litteraux.add(Short.parseShort(litteraux[i]));
+		}
+	}
 	
 	public ArrayList<Short> getLitteraux(){
 		return this.litteraux;

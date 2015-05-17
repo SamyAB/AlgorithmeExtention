@@ -38,9 +38,9 @@ public class FormuleCNF {
 			s+="AND";
 		}
 		s=s.substring(0,s.length()-3);
-		s.replaceAll("AND", "NOR");
-		s.replaceAll("OR", "AND");
-		s.replaceAll("NOR", "OR");
+		s=s.replaceAll("AND", "OU");
+		s=s.replaceAll("OR", "AND");
+		s=s.replaceAll("OU", "OR");
 		String[] chainesClauses=s.split("AND");
 		for(int i=0;i<chainesClauses.length;i++){
 			String[] chainesLitteraux=chainesClauses[i].split("OR");
@@ -57,7 +57,7 @@ public class FormuleCNF {
 		String s="";
 		Iterator<Clause> clausesIterator=this.clauses.iterator();
 		while(clausesIterator.hasNext()){
-			s+=clausesIterator.next().toString()+"/n";
+			s+=clausesIterator.next().toString()+"\n";
 		}
 		return s;
 	}
